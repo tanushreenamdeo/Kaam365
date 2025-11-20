@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrician Payments</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #eef2f3;
+            margin: 0;
+            padding: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #4f46e5;
+            font-weight: bold;
+        }
+
+        .back {
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            max-width: 750px;
+            margin: auto;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th {
+            background: #4f46e5;
+            color: white;
+            padding: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .amount {
+            font-weight: bold;
+            color: #2ecc71;
+        }
+
+        .no-records {
+            text-align: center;
+            padding: 15px;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Back Link -->
+    <a href="{% url 'electrician' %}" class="back">← Back to Electricians</a>
+
+    <div class="card">
+
+        <!-- Worker Info -->
+        <h2>Payment Details</h2>
+
+        {% if worker %}
+        <p><strong>Name:</strong> {{ worker.name }}</p>
+        <p><strong>Worker Type:</strong> {{ worker.worker_type }}</p>
+        {% endif %}
+
+        <!-- Payment Table -->
+        <h3>Payment History</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for p in payments %}
+                <tr>
+                    <td>{{ p.id }}</td>
+                    <td class="amount">₹ {{ p.amount }}</td>
+                    <td>{{ p.date }}</td>
+                    <td>{{ p.status }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="no-records">No payments found for this worker.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+</html>

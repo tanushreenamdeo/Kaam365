@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plumber Payments</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #f0f2f5;
+            font-family: Arial, sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 180px;
+            background: #2c3e50;
+            padding-top: 30px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+        }
+
+        .nav-item {
+            padding: 15px;
+            color: white;
+            text-decoration: none;
+            display: block;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: #34495e;
+            border-left: 3px solid #e67e22;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 200px;
+            padding: 20px;
+            width: calc(100% - 200px);
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            max-width: 750px;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #4f46e5;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+        <a href="{% url 'plumber' %}" class="nav-item">← Back</a>
+        <a href="{% url 'plumber' %}" class="nav-item">Plumbers</a>
+        <a href="{% url 'plumber_job_site' %}?worker_id={{ worker.id }}" class="nav-item">Job Sites</a>
+        <a href="{% url 'plumber_payment' %}?worker_id={{ worker.id }}" class="nav-item">Payments</a>
+        <a href="{% url 'setting' %}" class="nav-item">Settings</a>
+        <a href="{% url 'logout_user' %}" class="nav-item">Logout</a>
+
+    </div>
+
+    <div class="main">
+        <div class="card">
+
+            <h2>Plumber Payment Details</h2>
+
+            <p><strong>Name:</strong> {{ worker.name }}</p>
+            <p><strong>Phone:</strong> {{ worker.phone }}</p>
+
+            <h3 style="margin-top:25px;">Payment History</h3>
+
+            <table>
+                <tr>
+                    <th>Project</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+
+                {% for p in payments %}
+                <tr>
+                    <td>{{ p.project.name }}</td>
+                    <td>₹{{ p.amount }}</td>
+                    <td>{{ p.date }}</td>
+                    <td>{{ p.payment_status }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align:center;">No payments recorded</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+    </div>
+
+</body>
+</html>

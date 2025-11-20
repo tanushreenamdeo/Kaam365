@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+
+    <style>
+        /* Base Layout */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- Left Sidebar Navigation (Consistent Style) --- */
+        .sidebar {
+            width: 150px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .nav-item {
+            text-align: center;
+            width: 100%;
+            padding: 15px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            color: white;
+            position: relative;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item.active {
+            background-color: #34495e;
+            border-left: 3px solid #e67e22;
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: #34495e80;
+        }
+
+        .nav-icon {
+            font-size: 1.5em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 15px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7em;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .logout-container {
+            margin-top: 200px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid white;
+        }
+
+
+        /* --- Main Content Area --- */
+        .dashboard-container {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .header h1 { margin: 0; font-size: 1.8em; color: #2c3e50; }
+        .header p { margin: 5px 0 0; color: #7f8c8d; }
+
+        /* --- Settings Layout (Tabs + Content) --- */
+        .settings-content {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            min-height: 60vh;
+        }
+
+        /* --- Tab Navigation --- */
+        .tab-nav {
+            display: flex;
+            border-bottom: 2px solid #ecf0ff;
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #7f8c8d;
+            border: none;
+            background: transparent;
+            transition: color 0.3s, border-bottom 0.3s;
+            margin-right: 10px;
+            text-transform: uppercase;
+        }
+
+        .tab-btn.active {
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+        }
+
+        /* --- Tab Content --- */
+        .tab-pane {
+            display: none; /* Hidden by default */
+            padding-top: 10px;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .settings-form h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-left: 4px solid #e67e22;
+            padding-left: 10px;
+        }
+
+        /* --- Form Styles --- */
+        .form-group {
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        /* Checkbox/Toggle Styles */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #2ecc71;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Save Button */
+        .btn-save {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 15px;
+        }
+
+        .btn-save:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="admin.html" class="nav-item" title="Dashboard Overview">
+            <span class="nav-icon">Home page</span>
+        </a>
+
+
+        <div class="logout-container">
+            <a href="index.html" id="logoutBtn" class="nav-item" title="Logout">
+                <span class="nav-icon">Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+
+        <div class="header">
+            <h1>System Settings</h1>
+            <p>Configure general system options and master data parameters.</p>
+        </div>
+
+        <div class="settings-content">
+
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="general">General</button>
+                <button class="tab-btn" data-tab="master-data">Master Data</button>
+                <button class="tab-btn" data-tab="security">Security & Users</button>
+            </div>
+
+            <div id="general" class="tab-pane active">
+                <div class="settings-form">
+                    <h3>Dashboard Configuration</h3>
+
+                    <form id="generalSettingsForm">
+
+                        <div class="form-group">
+                            <label for="theme">Dashboard Theme</label>
+                            <select id="theme" name="theme">
+                                <option value="light">Light Mode (Default)</option>
+                                <option value="dark">Dark Mode</option>
+                                <option value="contrast">High Contrast</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notifications">Email Notifications</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notifications" name="notifications" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <small style="color: #7f8c8d; display: block; margin-top: 5px;">Receive alerts for pending payroll.</small>
+                        </div>
+
+                        <button type="submit" class="btn-save">Save General Settings</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="master-data" class="tab-pane">
+                <div class="settings-form">
+                    <h3>Job Role & Pay Rates</h3>
+
+                    <form id="masterDataForm">
+
+                        <div class="form-group">
+                            <label for="plumberRate">Plumber Hourly Rate (₹)</label>
+                            <input type="number" id="plumberRate" name="plumberRate" value="170" required min="100">
+                            <small style="color: #7f8c8d; display: block; margin-top: 5px;">Current pay rate per hour for Plumbers.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="electricianRate">Electrician Hourly Rate (₹)</label>
+                            <input type="number" id="electricianRate" name="electricianRate" value="190" required min="100">
+                        </div>
+
+                        <button type="submit" class="btn-save">Update Master Data</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="security" class="tab-pane">
+                <div class="settings-form">
+                    <h3>Admin Password Change</h3>
+                    <form id="securityForm">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn-save" style="background-color: #e74c3c;">Change Password</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <script>
+        // =========================================================================
+        // 1. TABS FUNCTIONALITY
+        // =========================================================================
+
+        function openTab(tabName) {
+            // Deactivate all buttons and hide all panes
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+            // Activate the clicked button and show the corresponding pane
+            document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Add event listeners to all tab buttons
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.tab-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    openTab(button.dataset.tab);
+                });
+            });
+        });
+
+        // =========================================================================
+        // 2. FORM SUBMISSION (Simulated)
+        // =========================================================================
+
+        function setupFormSubmission(formId, successMessage) {
+            const form = document.getElementById(formId);
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const data = {};
+                    formData.forEach((value, key) => {
+                        data[key] = value;
+                    });
+
+                    console.log(`Settings saved for ${formId}:`, data);
+                    alert(`Success: ${successMessage}`);
+
+                    // In a real application, you would send this to the backend:
+                    // fetch('/api/admin/settings/update', { method: 'POST', body: JSON.stringify(data) });
+                });
+            }
+        }
+
+        // =========================================================================
+        // 3. INITIALIZATION
+        // =========================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Setup form handlers
+            setupFormSubmission('generalSettingsForm', 'General settings updated successfully.');
+            setupFormSubmission('masterDataForm', 'Master data (Pay Rates) updated successfully.');
+            setupFormSubmission('securityForm', 'Admin password changed successfully.');
+
+            // LOGOUT FUNCTIONALITY
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm("Are you sure you want to log out?")) {
+                    alert("Logging out and redirecting to the index page...");
+                    window.location.href="index.html";
+                }
+            });
+
+            // Initial call to set the notification count (mocked to 0)
+            document.getElementById('notificationCount').textContent = '0';
+        });
+    </script>
+</body>
+</html>

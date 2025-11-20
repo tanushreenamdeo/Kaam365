@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overview</title>
+
+    <style>
+        /* Base Layout */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- Left Sidebar Navigation (Consistent Style) --- */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .nav-item {
+            text-align: center;
+            width: 100%;
+            padding: 15px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            color: white;
+            position: relative;
+            border-left: 3px solid transparent; /* Used for active state */
+        }
+
+        .nav-item.active {
+            background-color: #34495e;
+            border-left: 3px solid #e67e22; /* Orange highlight for active page */
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: #34495e80;
+        }
+
+        .nav-icon {
+            font-size: 1.5em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Notification Badge Style */
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 15px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7em;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .logout-container {
+            margin-top: auto;
+            width: 100%;
+            border-top: 1px solid #34495e;
+        }
+
+
+        /* --- Main Content Area --- */
+        .dashboard-container {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .header h1 { margin: 0; color: #2c3e50; font-size: 1.8em; }
+        .header p { margin: 5px 0 0; color: #7f8c8d; }
+
+        /* --- Admin Metric Cards (Top Row) --- */
+        .admin-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-card h3 {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            font-size: 2.2em;
+            font-weight: bold;
+        }
+
+        .metric-card.workers .metric-value { color: #3498db; }
+        .metric-card.jobs .metric-value { color: #2ecc71; }
+        .metric-card.payroll .metric-value { color: #e67e22; }
+        .metric-card.attendance .metric-value { color: #9b59b6; }
+
+        /* --- Recent Activity Section --- */
+        .activity-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-section h2 {
+            font-size: 1.4em;
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed #ecf0f1;
+            font-size: 0.95em;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-details strong {
+            display: block;
+        }
+
+        .activity-details span {
+            color: #7f8c8d;
+            font-size: 0.8em;
+        }
+
+        .activity-time {
+            font-weight: 600;
+            color: #3498db;
+            align-self: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+<h2>Dashboard</h2>
+        <a href="#" class="nav-item" title="Worker List">
+            <span class="nav-icon">Worker-list</span>
+        </a>
+
+        <a href="#" class="nav-item" title="Job Sites">
+            <span class="nav-icon">Job-Sites️</span>
+        </a>
+
+        <a href="#" class="nav-item" title="Payroll">
+            <span class="nav-icon">Payment</span>
+        </a>
+
+        <a href="#" class="nav-item" title="Settings">
+            <span class="nav-icon">Setting</span>
+            <span id="notificationCount" class="notification-badge"></span>
+        </a>
+
+        <div class="logout-container">
+            <a href="#" id="logoutBtn" class="nav-item" title="Logout">
+                <span class="nav-icon">Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+
+        <div class="header">
+            <h1>Administrative Overview</h1>
+            <p>Welcome, Admin. Here is a summary of the workforce.</p>
+        </div>
+
+        <div class="admin-metrics-grid">
+
+            <div class="metric-card workers">
+                <h3>TOTAL WORKERS</h3>
+                <div id="totalWorkers" class="metric-value">0</div>
+            </div>
+
+            <div class="metric-card jobs">
+                <h3>ACTIVE JOB SITES</h3>
+                <div id="activeJobSites" class="metric-value">0</div>
+            </div>
+
+            <div class="metric-card payroll">
+                <h3>PENDING PAYOUTS</h3>
+                <div id="pendingPayouts" class="metric-value">0</div>
+            </div>
+
+            <div class="metric-card attendance">
+                <h3>ON-SITE NOW</h3>
+                <div id="onSiteNow" class="metric-value">0</div>
+            </div>
+
+        </div>
+
+        <div class="activity-section">
+            <h2>RECENT WORKER ACTIVITY</h2>
+            <ul id="activityList" class="activity-list">
+                </ul>
+        </div>
+
+    </div>
+
+    <script>
+
+        // 1. MOCK DATA SOURCE (Admin-level data)
+
+        const adminData = {
+            notifications: 2,
+            metrics: {
+                totalWorkers: 580,
+                activeJobSites: 12,
+                pendingPayouts: "$15,200",
+                onSiteNow: 315,
+            },
+            recentActivity: [
+                { user: "Rohan S.", action: "Clocked Out (Site 5)", time: "1 min ago", status: "Out" },
+                { user: "Priya K.", action: "Clocked In (Site 1)", time: "5 min ago", status: "In" },
+                { user: "Amit V.", action: "Clocked In (Site 12)", time: "15 min ago", status: "In" },
+                { user: "Lata M.", action: "Completed Shift (Site 8)", time: "1 hour ago", status: "Done" },
+            ]
+        };
+
+
+        // 2. DOM Elements
+
+        const D = {
+            // Metrics
+            totalWorkers: document.getElementById('totalWorkers'),
+            activeJobSites: document.getElementById('activeJobSites'),
+            pendingPayouts: document.getElementById('pendingPayouts'),
+            onSiteNow: document.getElementById('onSiteNow'),
+
+            // Sidebar
+            notificationCount: document.getElementById('notificationCount'),
+            logoutBtn: document.getElementById('logoutBtn'),
+
+            // Content
+            activityList: document.getElementById('activityList'),
+        };
+
+
+        // 3. RENDERING AND UPDATE FUNCTIONS
+
+
+        /**
+         * Updates all metric cards and the notification badge.
+         */
+        function renderMetrics() {
+            D.totalWorkers.textContent = adminData.metrics.totalWorkers.toLocaleString();
+            D.activeJobSites.textContent = adminData.metrics.activeJobSites;
+            D.pendingPayouts.textContent = adminData.metrics.pendingPayouts;
+            D.onSiteNow.textContent = adminData.metrics.onSiteNow.toLocaleString();
+
+            // Update the Notification Badge
+            D.notificationCount.textContent = adminData.notifications;
+            D.notificationCount.style.display = adminData.notifications > 0 ? 'block' : 'none';
+        }
+
+        /**
+         * Renders the recent activity log.
+         */
+        function renderActivity() {
+            D.activityList.innerHTML = '';
+            adminData.recentActivity.forEach(item => {
+                const li = document.createElement('li');
+                li.classList.add('activity-item');
+
+                let icon = '';
+                if (item.status === 'In') {
+                    icon = '🟢';
+                    li.style.color = '#2ecc71';
+                } else if (item.status === 'Out') {
+                    icon = '🔴';
+                    li.style.color = '#e74c3c';
+                } else {
+                    icon = '🔵';
+                }
+
+                li.innerHTML = `
+                    <div class="activity-details">
+                        <strong>${icon} ${item.user}</strong>
+                        <span>${item.action}</span>
+                    </div>
+                    <div class="activity-time">${item.time}</div>
+                `;
+                D.activityList.appendChild(li);
+            });
+        }
+
+        /**
+         * Reruns all rendering functions to update the dashboard.
+         */
+        function updateAdminDashboard() {
+            renderMetrics();
+            renderActivity();
+        }
+
+
+
+        // 4. EVENT LISTENERS
+
+
+        // LOGOUT FUNCTIONALITY
+        D.logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm("Are you sure you want to log out?")) {
+                alert("Logging out and redirecting to the index page...");
+                // In a real application, you would use:
+                // window.location.href = '/index.html';
+
+                // For this single-file demonstration, we will reload the current page.
+                window.location.reload();
+            }
+        });
+
+
+        // Initial page load
+        document.addEventListener('DOMContentLoaded', updateAdminDashboard);
+    </script>
+</body>
+</html>

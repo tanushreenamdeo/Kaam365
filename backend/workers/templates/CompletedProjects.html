@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Completed Projects | Kaam365</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            background: #1e293b;
+            color: white;
+            position: fixed;
+            top: 0; bottom: 0;
+            padding-top: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar a {
+            padding: 15px 20px;
+            text-decoration: none;
+            color: white;
+            display: block;
+            font-size: 15px;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: #334155;
+            border-left: 4px solid #22c55e;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            padding: 15px 20px;
+            background: #ef4444;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            margin: 25px;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        /* MAIN */
+        .container {
+            margin-left: 240px;
+            padding: 25px;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .info-text {
+            color: #475569;
+            margin-bottom: 20px;
+        }
+
+        /* METRIC CARDS */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            font-size: 2.3em;
+            color: #22c55e;
+            margin: 0;
+        }
+
+        .card p {
+            margin-top: 6px;
+            color: #64748b;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #22c55e;
+            color: white;
+            text-align: left;
+            font-size: 14px;
+        }
+        tr:hover td {
+            background: #f1f5f9;
+        }
+
+        /* BADGES */
+        .badge {
+            padding: 6px 10px;
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .completed {
+            background: #22c55e;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="{% url 'admin_page' %}">Dashboard</a>
+        <a href="{% url 'plumber' %}">Plumbers</a>
+        <a href="{% url 'electrician' %}">Electricians</a>
+        <a href="{% url 'active_project' %}">Active Projects</a>
+        <a class="active" href="{% url 'completed_projects' %}">Completed Projects</a>
+        <a href="{% url 'newuser' %}">Add Worker</a>
+        <a href="{% url 'logout_user' %}" class="logout-btn">Logout</a>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <h1>Completed Projects Overview</h1>
+        <p class="info-text">Summary of all construction projects that have been successfully completed.</p>
+
+        <!-- METRICS -->
+        <div class="card-grid">
+
+            <div class="card">
+                <h2>{{ projects.count }}</h2>
+                <p>Total Completed Projects</p>
+            </div>
+
+            <div class="card">
+                <h2>{{ total_workers }}</h2>
+                <p>Total Workers Involved</p>
+            </div>
+
+            <div class="card">
+                <h2>{{ total_plumbers }}</h2>
+                <p>Total Plumbers Used</p>
+            </div>
+
+            <div class="card">
+                <h2>{{ total_electricians }}</h2>
+                <p>Total Electricians Used</p>
+            </div>
+
+        </div>
+
+        <!-- TABLE OF COMPLETED PROJECTS -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Project Name</th>
+                    <th>Location</th>
+                    <th>Start Date</th>
+                    <th>Completed Date</th>
+                    <th>Assigned Workers</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for p in projects %}
+                <tr>
+                    <td>{{ p.id }}</td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ p.location }}</td>
+                    <td>{{ p.start_date }}</td>
+                    <td>{{ p.completed_date }}</td>
+                    <td>{{ p.assigned_workers.count }}</td>
+                    <td><span class="badge completed">Completed</span></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" style="text-align:center; color:#64748b;">No Completed Projects Found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+</html>

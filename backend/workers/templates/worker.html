@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Workers List</title>
+    <style>
+        body {
+            background: url("{% static 'img/img1.avif' %}") no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 70%;
+            margin: 80px auto;
+            border-collapse: collapse;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+        th, td {
+            padding: 15px;
+            border: 1px solid white;
+            text-align: left;
+        }
+        th {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Registered Workers</h1>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Phone</th>
+            <th>Location</th>
+            <th>Salary</th>
+        </tr>
+        {% for w in workers %}
+        <tr>
+            <td>{{ w.name }}</td>
+            <td>{{ w.job_role }}</td>
+            <td>{{ w.phone }}</td>
+            <td>{{ w.location }}</td>
+            <td>{{ w.salary }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" style="text-align:center;">No workers found.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

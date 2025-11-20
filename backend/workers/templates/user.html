@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ worker.name }} | Worker Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background: #1e293b;
+            color: white;
+            position: fixed;
+            top: 0; bottom: 0;
+            padding-top: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar a {
+            padding: 15px 20px;
+            text-decoration: none;
+            color: white;
+            display: block;
+            font-size: 15px;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: #334155;
+            border-left: 4px solid #4f46e5;
+        }
+
+        .container {
+            margin-left: 240px;
+            padding: 25px;
+        }
+
+        h1 {
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #334155;
+            margin-top: 30px;
+        }
+
+        /* Worker Info Card */
+        .info-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #4f46e5;
+            color: white;
+            text-align: left;
+        }
+
+        tr:hover td {
+            background: #f9fafb;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            padding: 10px;
+            color: white;
+            text-align: center;
+            margin: 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: block;
+        }
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a class="active" href="{% url 'user_detail' worker.id %}">Dashboard</a>
+        <a href="{% url 'setting' %}">Settings</a>
+        <a href="{% url 'logout_user' %}" class="logout-btn">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+
+        <h1>Welcome, {{ worker.name }} 👋</h1>
+        <p style="color:#475569;">Worker Dashboard — {{ worker.worker_type }}</p>
+
+        <!-- Worker Info -->
+        <div class="info-card">
+            <h2>Personal Information</h2>
+            <p><strong>Name:</strong> {{ worker.name }}</p>
+            <p><strong>Email:</strong> {{ worker.email }}</p>
+            <p><strong>Phone:</strong> {{ worker.phone|default:"Not Available" }}</p>
+            <p><strong>Worker Type:</strong> {{ worker.worker_type }}</p>
+            <p><strong>Joined:</strong> {{ worker.joined_date }}</p>
+            <p><strong>Status:</strong> {% if worker.is_available %}Available{% else %}Busy{% endif %}</p>
+        </div>
+
+        <!-- Job Schedules -->
+        <h2>Your Job Schedules</h2>
+        <table>
+            <tr>
+                <th>Project</th>
+                <th>Day</th>
+                <th>Time</th>
+                <th>Location</th>
+            </tr>
+
+            {% for s in schedules %}
+            <tr>
+                <td>{{ s.project.name }}</td>
+                <td>{{ s.day }}</td>
+                <td>{{ s.start_time }} - {{ s.end_time }}</td>
+                <td>{{ s.location }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align:center;">No schedules assigned.</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <!-- Payments -->
+        <h2>Your Payments</h2>
+        <table>
+            <tr>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+
+            {% for p in payments %}
+            <tr>
+                <td>₹ {{ p.amount }}</td>
+                <td>{{ p.date }}</td>
+                <td>{{ p.status }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" style="text-align:center;">No payments recorded.</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+</body>
+</html>
