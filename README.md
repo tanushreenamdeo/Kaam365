@@ -70,4 +70,4 @@ Run the server:
 
 python manage.py migrate  
 python manage.py runserver  
-## Installation and Setup
+
