@@ -71,3 +71,13 @@ Run the server:
 python manage.py migrate  
 python manage.py runserver  
 
+## Screenshots
+
+### Login Page
+![Login](screenshots/login.png)
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Projects Page
+![Projects](screenshots/projects.png)
